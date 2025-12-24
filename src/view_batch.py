@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from backend import analyze_batch_data, CLASS_INFO
+from src.backend import analyze_batch_data, CLASS_INFO
 
 def render_batch_analysis(patient_data_map, model, fs, wavelet_type, r_peak_height):
     """Hàm hiển thị giao diện quét hàng loạt"""

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import time
 import plotly.express as px
-from backend import (
+from src.backend import (
     denoise_signal_wavelet, 
     detect_and_segment, 
     predict_from_segments, 
@@ -11,7 +11,7 @@ from backend import (
     CLASS_INFO
 )
 # Import các hàm vẽ đồ thị đã tách
-from ui_plots import (
+from src.ui_plots import (
     plot_interactive_ecg, 
     plot_classes_pie, 
     plot_beat_shape, 

@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
-from backend import CLASS_INFO, CLASSES_KEYS # Import thông tin màu sắc
+from src.backend import CLASS_INFO, CLASSES_KEYS # Import thông tin màu sắc
 
 # --- MATPLOTLIB PLOTS (Chuyển từ backend cũ sang) ---
 def set_plot_style(dark_mode=True):

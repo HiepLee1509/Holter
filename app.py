@@ -6,10 +6,10 @@ import json
 import ast
 
 # Import các module chúng ta đã chia tách
-from backend import load_arrhythmia_model, get_model_input_length
-from ui_config import setup_page_config, apply_custom_css
-from view_single import render_single_analysis
-from view_batch import render_batch_analysis
+from src.backend import load_arrhythmia_model, get_model_input_length
+from src.ui_config import setup_page_config, apply_custom_css
+from src.view_single import render_single_analysis
+from src.view_batch import render_batch_analysis
 
 # 1. CẤU HÌNH TRANG & GIAO DIỆN
 setup_page_config()
