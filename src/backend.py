@@ -2,11 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from tensorflow.keras.models import load_model
-from scipy.signal import find_peaks # Phát hiện đỉnh R
+from scipy.signal import find_peaks
 import pywt # Thư viện Wavelet
-# --- CẤU HÌNH DỮ LIỆU & LỜI KHUYÊN ---
 
-# Định nghĩa thông tin chi tiết cho 5 lớp (Classes)
+# Classes tương ứng với 5 loại rối loạn nhịp tim
 CLASS_INFO = {
     'N': {
         "name": "Bình thường (Normal)",

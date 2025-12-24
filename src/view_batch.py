@@ -14,18 +14,18 @@ def render_batch_analysis(patient_data_map, model, fs, wavelet_type, r_peak_heig
         status_text = st.empty()
         status_text.text("Đang xử lý hàng loạt... Vui lòng chờ.")
         
-        # Gọi hàm backend
+        # Call backend function to analyze batch data
         batch_df = analyze_batch_data(patient_data_map, model, fs, wavelet_type, r_peak_height)
         
         progress_bar.progress(100)
         status_text.text("✅ Hoàn tất!")
         st.session_state.batch_df = batch_df
 
-    # HIỂN THỊ KẾT QUẢ
+    # show results if available
     if 'batch_df' in st.session_state:
         df = st.session_state.batch_df
         
-        # 1. Metrics Tổng quan
+        # 1. Metrics
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Tổng số ca", len(df))
         c2.metric("Nguy cơ CAO", len(df[df['Risk Level'].str.contains("High")]))
@@ -34,7 +34,7 @@ def render_batch_analysis(patient_data_map, model, fs, wavelet_type, r_peak_heig
         
         st.divider()
         
-        # 2. Biểu đồ
+        # 2. Charts and Table
         col_chart, col_table = st.columns([1, 2])
         
         with col_chart:
@@ -53,7 +53,7 @@ def render_batch_analysis(patient_data_map, model, fs, wavelet_type, r_peak_heig
             )
             st.plotly_chart(fig_risk, use_container_width=True)
             
-            # Biểu đồ tổng số lượng các loại nhịp
+            # Bar chart summary of beat types
             total_counts = df[['N', 'S', 'V', 'F', 'Q']].sum()
             fig_bar = px.bar(
                 x=total_counts.index, y=total_counts.values,
@@ -67,7 +67,7 @@ def render_batch_analysis(patient_data_map, model, fs, wavelet_type, r_peak_heig
         with col_table:
             st.subheader("📋 Bảng chi tiết từng bệnh nhân")
             
-            # Highlight các dòng nguy hiểm
+            # Highlight Risk Level
             st.dataframe(
                 df,
                 use_container_width=True,

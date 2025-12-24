@@ -3,9 +3,9 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 import pandas as pd
-from src.backend import CLASS_INFO, CLASSES_KEYS # Import thông tin màu sắc
+from src.backend import CLASS_INFO, CLASSES_KEYS
 
-# --- MATPLOTLIB PLOTS (Chuyển từ backend cũ sang) ---
+# MATPLOTLIB PLOTS
 def set_plot_style(dark_mode=True):
     """Cấu hình style cho Matplotlib"""
     if dark_mode:
@@ -36,11 +36,9 @@ def plot_raw_signal_with_peaks(raw_ecg, peaks, predicted_codes, dark_mode=False)
     line_color = "#00d4ff" if dark_mode else "#1f77b4"
     ax.plot(raw_ecg, label="Tín hiệu ECG", color=line_color, alpha=0.8, linewidth=1.2)
     
-    # Vẽ các điểm R với màu tương ứng
+    # Draw peaks with different colors based on predicted classes
     for code in CLASSES_KEYS:
         info = CLASS_INFO[code]
-        # Lấy các đỉnh thuộc lớp này
-        # predicted_codes là list, cần chuyển thành np array để so sánh
         mask = np.array(predicted_codes) == code
         class_peaks = peaks[mask]
         
@@ -71,15 +69,15 @@ def plot_beat_segment(beat_data, pred_code=None, dark_mode=False):
     plt.tight_layout()
     return fig
 
-# --- PLOTLY INTERACTIVE PLOTS (Chuyển từ frontend cũ sang) ---
+# PLOTLY INTERACTIVE PLOTS
 def plot_interactive_ecg(raw_signal, peaks, codes, fs=360):
     """Vẽ biểu đồ ECG tương tác với Plotly"""
-    # Tạo trục thời gian (giây) thay vì mẫu
+    # Create time axis in seconds instead of samples
     time_axis = np.arange(len(raw_signal)) / fs
     
     fig = go.Figure()
     
-    # 1. Vẽ tín hiệu gốc
+    # Draw raw ECG signal
     fig.add_trace(go.Scatter(
         x=time_axis, y=raw_signal,
         mode='lines',
@@ -88,11 +86,11 @@ def plot_interactive_ecg(raw_signal, peaks, codes, fs=360):
         opacity=0.8
     ))
     
-    # 2. Vẽ các đỉnh R được phát hiện (Nhóm theo loại bệnh)
+    # Draw peaks with different colors based on predicted classes
     unique_codes = list(set(codes))
     for code in unique_codes:
         indices = [i for i, x in enumerate(codes) if x == code]
-        # Lấy vị trí đỉnh (sample) và chuyển sang giây
+        # Get peak positions and amplitudes
         current_peaks = peaks[indices]
         current_peaks_time = current_peaks / fs
         current_amps = raw_signal[current_peaks]
@@ -125,14 +123,14 @@ def plot_classes_pie(codes):
     if not codes or len(codes) == 0:
         return None
         
-    # Thống kê số lượng
+    # Get number of occurrences for each class
     counts = pd.Series(codes).value_counts()
     
-    # Tạo DataFrame cho Plotly
+    # Create DataFrame for plotting
     df_pie = pd.DataFrame({'Loại': counts.index, 'Số lượng': counts.values})
     df_pie['Tên'] = df_pie['Loại'].apply(lambda x: CLASS_INFO[x]['name'])
     
-    # Vẽ biểu đồ
+    # Plot pie chart
     fig_pie = px.pie(
         df_pie, 
         values='Số lượng', 
@@ -147,7 +145,7 @@ def plot_beat_shape(segment, code, beat_index=0):
     """Vẽ hình thái chi tiết của một nhịp tim cụ thể (Line Chart)"""
     info = CLASS_INFO.get(code, {'name': 'Unknown', 'color': 'gray'})
     
-    # squeeze() để đảm bảo mảng 1 chiều
+    # squeeze() for 2D array with single column
     fig_beat = px.line(segment.squeeze(), title=f"Hình thái nhịp thứ {beat_index}")
     fig_beat.update_traces(line_color=info['color'], line_width=3)
     fig_beat.update_layout(
@@ -165,7 +163,7 @@ def plot_poincare_chart(hrv_data):
     
     fig_poincare = go.Figure()
     
-    # Vẽ các điểm dữ liệu
+    # Plot RR_n vs RR_n+1 points
     fig_poincare.add_trace(go.Scatter(
         x=hrv_data['poincare_x'],
         y=hrv_data['poincare_y'],
@@ -180,8 +178,8 @@ def plot_poincare_chart(hrv_data):
         ),
         hovertemplate="RR(n): %{x:.1f}ms<br>RR(n+1): %{y:.1f}ms<extra></extra>"
     ))
-    
-    # Vẽ đường chéo (Identity Line)
+
+    # Plot Identity Line
     min_val = min(np.min(hrv_data['poincare_x']), np.min(hrv_data['poincare_y']))
     max_val = max(np.max(hrv_data['poincare_x']), np.max(hrv_data['poincare_y']))
     fig_poincare.add_trace(go.Scatter(

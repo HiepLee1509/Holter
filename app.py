@@ -5,7 +5,6 @@ import os
 import json
 import ast
 
-# Import các module chúng ta đã chia tách
 from src.backend import load_arrhythmia_model, get_model_input_length
 from src.ui_config import setup_page_config, apply_custom_css
 from src.view_single import render_single_analysis
@@ -27,8 +26,7 @@ def setup_model(model_path):
 MODEL_PATH = "model\\ecg_model_code 17_t5.h5"
 model, REQUIRED_LENGTH = setup_model(MODEL_PATH)
 
-# 3. SIDEBAR (INPUT & SETTINGS)
-# --- SIDEBAR ---
+# SIDEBAR (INPUT & SETTINGS)
 with st.sidebar:
     st.image("https://cdn-icons-png.flaticon.com/512/2966/2966486.png", width=80)
     st.title("AI Heart Guard")
@@ -45,23 +43,23 @@ with st.sidebar:
         r_peak_height = st.slider("Min Peak Height", 0.1, 5.0, 0.5)
     
     st.markdown("---")
-    st.caption("Developed by Le Nghia Hiep\nMSSV: 20235326")
+    st.caption("Developed by Lê Nghĩa Hiệp\nMSSV: 20235326")
 
-# 4. GIAO DIỆN CHÍNH (MAIN CONTENT)
+# MAIN CONTENT
 st.title("🫀 Phân tích & Chẩn đoán Rối loạn nhịp tim")
 st.markdown("Hệ thống hỗ trợ chẩn đoán tự động sử dụng **Deep Learning (CNN + LSTM)**.")
 
-# Kiểm tra Model
+# Model Checking
 if model is None:
     st.error(f"⚠️ Không tìm thấy file model tại `{MODEL_PATH}`. Vui lòng kiểm tra lại thư mục dự án.")
     st.stop()
 
-# 5. XỬ LÝ ĐỌC FILE (Controller Logic)
+# Controller Logic
 patient_data_map = {}
 
 if uploaded_file is not None:
     try:
-        # ... (Code đọc file JSON/CSV) ...
+        # Read JSON/CSV file
         if uploaded_file.name.endswith('.json'):
             data = json.load(uploaded_file)
             if isinstance(data, list):
@@ -83,15 +81,15 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"Lỗi đọc file: {e}")
         
-# 6. ĐIỀU HƯỚNG HIỂN THỊ (ROUTING)
+# ROUTING TO VIEWS
 if patient_data_map:
     st.success(f"✅ Đã tải thành công dữ liệu của {len(patient_data_map)} bệnh nhân/bản ghi.")
     
-    # Tạo Tabs chính để chọn chế độ
+    # Create Tabs for Single and Batch Analysis
     tab_single, tab_batch = st.tabs(["👤 Phân tích từng ca (Single)", "👥 Quét toàn bộ (Batch Scan)"])
 
     with tab_single:
-        # Gọi View Single
+        # Call View Single
         render_single_analysis(
             patient_data_map, 
             model, 
@@ -102,7 +100,7 @@ if patient_data_map:
         )
 
     with tab_batch:
-        # Gọi View Batch
+        # Call View Batch
         render_batch_analysis(
             patient_data_map, 
             model, 
