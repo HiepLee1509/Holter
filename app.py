@@ -1,3 +1,5 @@
+# .\venv\Scripts\activate
+# streamlit run app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -46,8 +48,8 @@ with st.sidebar:
     st.caption("Developed by Lê Nghĩa Hiệp\nMSSV: 20235326")
 
 # MAIN CONTENT
-st.title("🫀 Phân tích & Chẩn đoán Rối loạn nhịp tim")
-st.markdown("Hệ thống hỗ trợ chẩn đoán tự động sử dụng **Deep Learning (CNN + LSTM)**.")
+st.title("🫀 Phân tích & Chẩn đoán Rối loạn nhịp tim ECG")
+st.markdown("Hệ thống hỗ trợ chẩn đoán tự động sử dụng mô hình AI **Deep Learning (CNN + LSTM)**.")
 
 # Model Checking
 if model is None:
@@ -83,10 +85,10 @@ if uploaded_file is not None:
         
 # ROUTING TO VIEWS
 if patient_data_map:
-    st.success(f"✅ Đã tải thành công dữ liệu của {len(patient_data_map)} bệnh nhân/bản ghi.")
+    st.success(f"✅ Đã tải thành công dữ liệu {len(patient_data_map)} id của bệnh nhân.")
     
     # Create Tabs for Single and Batch Analysis
-    tab_single, tab_batch = st.tabs(["👤 Phân tích từng ca (Single)", "👥 Quét toàn bộ (Batch Scan)"])
+    tab_single, tab_batch = st.tabs(["👤 Phân tích trên 1 id cụ thể (Single mode)", "👥 Quét toàn bộ (Scan mode)"])
 
     with tab_single:
         # Call View Single

@@ -22,7 +22,7 @@ def render_single_analysis(patient_data_map, model, fs, wavelet_type, r_peak_hei
     """Hàm hiển thị giao diện phân tích từng ca"""
     
     # 1. Selector for ID
-    selected_id = st.selectbox("Chọn bản ghi bệnh nhân:", list(patient_data_map.keys()))
+    selected_id = st.selectbox("Chọn id để bắt đầu phân tích:", list(patient_data_map.keys()))
     raw_ecg = np.array(patient_data_map[selected_id])
     
     # 2. Button Bắt đầu phân tích
@@ -76,9 +76,9 @@ def render_single_analysis(patient_data_map, model, fs, wavelet_type, r_peak_hei
             
         st.markdown("### 📊 Tổng quan sức khỏe tim mạch")
         m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Nhịp tim trung bình", f"{int(bpm)} BPM", delta=f"{int(bpm-75)}" if bpm>0 else None)
+        m1.metric("Nhịp tim trung bình", f"{int(bpm)} BPM", delta=f"{int(bpm-75)}" if bpm>0 else None, delta_color="inverse")
         m2.metric("Tổng số nhịp đã quét", f"{total_beats}")
-        m3.metric("Số nhịp bất thường", f"{abnormal_beats}", delta=f"-{abnormal_beats}" if abnormal_beats > 0 else "Tốt", delta_color="inverse")
+        m3.metric("Số nhịp bất thường", f"{abnormal_beats}", delta=f"-{abnormal_beats}" if abnormal_beats > 0 else "Tốt", delta_color="normal")
         m4.metric("Tỷ lệ bất thường", f"{abnormal_rate:.1f}%", delta_color="inverse")
         
         st.divider()
@@ -94,11 +94,11 @@ def render_single_analysis(patient_data_map, model, fs, wavelet_type, r_peak_hei
         
         # TAB 1: OVERVIEW
         with tab_overview:
-            st.subheader("Điện tâm đồ toàn trình")
+            st.subheader("📈 Biểu đồ ECG tương tác")
             fig = plot_interactive_ecg(res['raw'], res['peaks'], res['codes'], fs=fs)
             st.plotly_chart(fig, use_container_width=True)
             
-            st.subheader("📝 Kết luận & Lời khuyên AI")
+            st.subheader("📝 Kết luận & Lời khuyên từ bác sĩ AI")
             c1, c2 = st.columns([1, 1])
             with c1:
                 fig_pie = plot_classes_pie(res['codes'])
@@ -111,7 +111,7 @@ def render_single_analysis(patient_data_map, model, fs, wavelet_type, r_peak_hei
                     css_class = "safe" if code == 'N' else "danger" if code in ['V', 'F'] else "warning"
                     st.markdown(f"""
                     <div class="advice-card {css_class}">
-                        <h4>{info['name']} (Code: {code}) - {counts[code]} lần</h4>
+                        <h4>{info['name']} (Nhãn tương ứng: {code}) - {counts[code]} lần</h4>
                         <p>{info['advice']}</p>
                     </div>
                     """, unsafe_allow_html=True)

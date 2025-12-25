@@ -107,10 +107,10 @@ def plot_interactive_ecg(raw_signal, peaks, codes, fs=360):
         ))
 
     fig.update_layout(
-        title="Biểu đồ Điện tâm đồ (Zoom & Pan)",
+        title="Biểu đồ Điện tâm đồ",
         template="plotly_dark",
-        xaxis_title="Thời gian (Giây)",
-        yaxis_title="Biên độ (Normalized)",
+        xaxis_title="Thời gian (s)",
+        yaxis_title="Biên độ (mV)",
         hovermode="x unified",
         legend=dict(orientation="h", y=1.1),
         height=400,
@@ -150,7 +150,7 @@ def plot_beat_shape(segment, code, beat_index=0):
     fig_beat.update_traces(line_color=info['color'], line_width=3)
     fig_beat.update_layout(
         xaxis_title="Mẫu (Sample)", 
-        yaxis_title="Biên độ", 
+        yaxis_title="Biên độ (mV)", 
         showlegend=False, 
         height=300
     )
